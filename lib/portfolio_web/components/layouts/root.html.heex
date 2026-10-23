@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="csrf-token" content={get_csrf_token()} />
+    <meta
+      name="description"
+      content={
+        assigns[:page_description] ||
+          "Massimiliano D'Acunzo: Software Engineer at Microsoft building cloud-scale distributed systems, and maker of FPInk, MarkNotes, Repentance and Privee."
+      }
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={assigns[:page_title] || "Massimiliano D'Acunzo"} />
+    <meta
+      property="og:description"
+      content={
+        assigns[:page_description] ||
+          "Software Engineer at Microsoft. Portfolio, projects and experience."
+      }
+    />
+    <meta name="theme-color" content="#1d232a" />
+    <.live_title default="Massimiliano D'Acunzo" suffix=" · Massimiliano D'Acunzo" phx-no-format>{assigns[:page_title]}</.live_title>
+    <link rel="icon" href={~p"/favicon.svg"} type="image/svg+xml" />
+    <link phx-track-static rel="stylesheet" href={~p"/assets/css/app.css"} />
+    <script defer phx-track-static type="text/javascript" src={~p"/assets/js/app.js"}>
+    </script>
+    <script>
+      (() => {
+        const KEY = "phx:theme";
+        const THEMES = ["light", "dark", "gruvbox", "nord", "solarized", "dracula"];
+        const root = document.documentElement;
+        const systemTheme = () => matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+
+        const markActive = (choice) => {
+          document.querySelectorAll("[data-phx-theme]").forEach((el) => {
+            el.setAttribute("aria-checked", String(el.dataset.phxTheme === choice));
+          });
+          document.querySelectorAll("[data-theme-label]").forEach((el) => {
+            const btn = document.querySelector(`[data-phx-theme="${choice}"]`);
+            el.textContent = btn ? btn.dataset.themeName : choice;
+          });
+        };
+
+        const setTheme = (theme) => {
+          if (!theme || theme === "system" || !THEMES.includes(theme)) {
+            localStorage.removeItem(KEY);
+            root.setAttribute("data-theme", systemTheme());
+            root.setAttribute("data-theme-source", "system");
+            markActive("system");
+          } else {
+            localStorage.setItem(KEY, theme);
+            root.setAttribute("data-theme", theme);
+            root.setAttribute("data-theme-source", "user");
+            markActive(theme);
+          }
+        };
+
+        setTheme(localStorage.getItem(KEY));
+        const refresh = () => markActive(localStorage.getItem(KEY) || "system");
+        document.addEventListener("DOMContentLoaded", refresh);
+        window.addEventListener("phx:page-loading-stop", refresh);
+        window.addEventListener("storage", (e) => e.key === KEY && setTheme(e.newValue));
+        window.addEventListener("phx:set-theme", (e) => {
+          setTheme(e.target.dataset.phxTheme);
+          document.activeElement?.blur();
+        });
+
+        matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+          if (root.getAttribute("data-theme-source") === "system") {
+            root.setAttribute("data-theme", systemTheme());
+          }
+        });
+      })();
+    </script>
+  </head>
+  <body class="min-h-screen bg-base-100 text-base-content antialiased">
+    {@inner_content}
+  </body>
+</html>

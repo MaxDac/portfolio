@@ -1,0 +1,36 @@
+# Fly.io configuration. Change `app` to the name you created with `fly apps create`
+# (or let `fly launch --no-deploy` rewrite it), then run `fly deploy`.
+app = "maxdac-portfolio"
+primary_region = "lhr"
+kill_signal = "SIGTERM"
+
+[build]
+
+[env]
+  PHX_HOST = "maxdac-portfolio.fly.dev"
+  PORT = "8080"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+  [http_service.concurrency]
+    type = "connections"
+    hard_limit = 1000
+    soft_limit = 1000
+
+  [[http_service.checks]]
+    grace_period = "10s"
+    interval = "30s"
+    method = "GET"
+    timeout = "5s"
+    path = "/health"
+
+[[vm]]
+  memory = "256mb"
+  cpu_kind = "shared"
+  cpus = 1
