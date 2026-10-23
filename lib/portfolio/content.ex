@@ -99,7 +99,7 @@ defmodule Portfolio.Content do
             kind: :primary
           },
           %Link{label: "Source on GitHub", url: "#{@github}/fpink"},
-          %Link{label: "Releases", url: "#{@github}/fpink/releases"}
+          %Link{label: "Latest APK release", url: "#{@github}/fpink/releases/latest"}
         ]
       },
       %Project{
@@ -122,7 +122,7 @@ defmodule Portfolio.Content do
         stack: ["Elixir", "Phoenix LiveView", "Kotlin", "Electron", "Rust", "WASM"],
         links: [
           %Link{label: "Open MarkNotes Web", url: "https://marknotes.fly.dev", kind: :primary},
-          %Link{label: "Android app", url: "#{@github}/MarkNotes"},
+          %Link{label: "Android app", url: "#{@github}/MarkNotes/releases"},
           %Link{label: "Desktop app", url: "#{@github}/marknotes-electron"},
           %Link{label: "Web app source", url: "#{@github}/marknotes-web"},
           %Link{label: "Sync core (Rust)", url: "#{@github}/marknotes-sync"},
@@ -173,7 +173,7 @@ defmodule Portfolio.Content do
         links: [
           %Link{label: "Try Privee", url: "https://bauta.fly.dev", kind: :primary},
           %Link{label: "Source on GitHub", url: "#{@github}/Privee"},
-          %Link{label: "Android app", url: "#{@github}/PriveeApp"},
+          %Link{label: "Android app", url: "#{@github}/PriveeApp/releases/latest"},
           %Link{label: "Deploy your own", url: "#{@github}/PriveeDeploy"}
         ]
       }
