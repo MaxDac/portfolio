@@ -1,7 +1,6 @@
-# Fly.io configuration. Change `app` to the name you created with `fly apps create`
-# (or let `fly launch --no-deploy` rewrite it), then run `fly deploy`.
+# Production deployment is managed by the main-branch GitHub Actions pipeline.
 app = "maxdac-portfolio"
-primary_region = "lhr"
+primary_region = "ams"
 kill_signal = "SIGTERM"
 
 [build]
@@ -24,7 +23,7 @@ kill_signal = "SIGTERM"
     soft_limit = 1000
 
   [[http_service.checks]]
-    grace_period = "10s"
+    grace_period = "20s"
     interval = "30s"
     method = "GET"
     timeout = "5s"

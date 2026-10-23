@@ -50,3 +50,71 @@ jobs:
       - run: mix assets.setup
       - run: mix compile --warnings-as-errors
       - run: mix assets.deploy
+
+  deploy:
+    needs: [test, assets]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'MaxDac/portfolio'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    concurrency:
+      group: fly-production
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+
+      - name: Skip superseded main revisions
+        id: revision
+        env:
+          DEPLOY_SHA: ${{ github.sha }}
+        run: |
+          main_sha="$(git ls-remote --exit-code origin refs/heads/main | cut -f1)"
+          if [ "$main_sha" = "$DEPLOY_SHA" ]; then
+            echo "current=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "current=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Skipping superseded revision $DEPLOY_SHA; main is now $main_sha."
+          fi
+
+      - uses: superfly/flyctl-actions/setup-flyctl@ed8efb33836e8b2096c7fd3ba1c8afe303ebbff1
+        if: steps.revision.outputs.current == 'true'
+        with:
+          version: 0.4.120
+
+      - name: Deploy production release
+        if: steps.revision.outputs.current == 'true'
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        run: |
+          if [ -z "$FLY_API_TOKEN" ]; then
+            echo "::error::The FLY_API_TOKEN Actions secret must contain a deploy token for maxdac-portfolio."
+            exit 1
+          fi
+          flyctl deploy --local-only --ha=false \
+            --app maxdac-portfolio --config fly.toml --yes \
+            --image-label "git-${GITHUB_SHA}"
+
+      - name: Check public production endpoints
+        if: steps.revision.outputs.current == 'true'
+        env:
+          BASE_URL: https://maxdac-portfolio.fly.dev
+        run: |
+          response="$(curl --silent --show-error --fail \
+            --retry 5 --retry-all-errors --retry-delay 2 --retry-max-time 120 \
+            --connect-timeout 10 --max-time 30 \
+            --write-out $'\n%{http_code}' "$BASE_URL/health")"
+          if [ "$response" != $'ok\n200' ]; then
+            echo "::error::Production /health must return HTTP 200 with body 'ok'."
+            exit 1
+          fi
+          for path in / /projects/fpink; do
+            status="$(curl --silent --show-error --fail \
+              --retry 5 --retry-all-errors --retry-delay 2 --retry-max-time 120 \
+              --connect-timeout 10 --max-time 30 \
+              --output /dev/null --write-out '%{http_code}' "$BASE_URL$path")"
+            if [ "$status" != "200" ]; then
+              echo "::error::Production $path returned HTTP $status instead of 200."
+              exit 1
+            fi
+          done
