@@ -24,8 +24,8 @@ defmodule PortfolioWeb.ProjectLive do
   def render(assigns) do
     ~H"""
     <Layouts.app flash={@flash}>
-      <article class="mx-auto max-w-4xl px-4 py-16 sm:px-6">
-        <a href="/#projects" class="link link-hover text-sm opacity-80">
+      <article id="project" class="mx-auto max-w-4xl px-4 py-16 sm:px-6">
+        <a id="back-to-projects" href="/#projects" class="link link-hover text-sm opacity-80">
           <span aria-hidden="true">←</span> All projects
         </a>
 
@@ -35,13 +35,15 @@ defmodule PortfolioWeb.ProjectLive do
           </span>
 
           <div>
-            <h1 class="text-4xl font-extrabold tracking-tight sm:text-5xl">{@project.name}</h1>
+            <h1 id="project-title" class="text-4xl font-extrabold tracking-tight sm:text-5xl">
+              {@project.name}
+            </h1>
 
             <p class="mt-2 text-lg opacity-80">{@project.tagline}</p>
           </div>
         </header>
 
-        <div class="mt-8 flex flex-wrap gap-3">
+        <div id="project-links" class="mt-8 flex flex-wrap gap-3">
           <Layouts.project_link :for={link <- @project.links} link={link} />
         </div>
 
@@ -68,12 +70,17 @@ defmodule PortfolioWeb.ProjectLive do
           </ul>
         </section>
 
-        <nav class="mt-16 border-t border-base-300 pt-8" aria-label="Other projects">
+        <nav
+          id="other-projects"
+          class="mt-16 border-t border-base-300 pt-8"
+          aria-label="Other projects"
+        >
           <h2 class="text-sm font-semibold uppercase tracking-wider opacity-70">Other projects</h2>
 
           <ul class="mt-4 grid gap-4 sm:grid-cols-3">
             <li :for={other <- @others}>
               <.link
+                id={"other-project-#{other.slug}"}
                 navigate={~p"/projects/#{other.slug}"}
                 class="block rounded-box border border-base-300 bg-base-200 p-4 transition hover:border-primary"
               >

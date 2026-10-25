@@ -36,17 +36,24 @@ defmodule PortfolioWeb.Layouts do
     >
       Skip to content
     </a>
-    <header class="sticky top-0 z-40 border-b border-base-300 bg-base-100/85 backdrop-blur">
-      <nav class="navbar mx-auto max-w-6xl px-4 sm:px-6" aria-label="Main">
+    <header
+      id="site-header"
+      class="sticky top-0 z-40 border-b border-base-300 bg-base-100/85 backdrop-blur"
+    >
+      <nav id="main-nav" class="navbar mx-auto max-w-6xl px-4 sm:px-6" aria-label="Main">
         <div class="flex-1">
-          <.link navigate={~p"/"} class="flex items-center gap-2 font-bold tracking-tight">
+          <.link
+            id="home-link"
+            navigate={~p"/"}
+            class="flex items-center gap-2 font-bold tracking-tight"
+          >
             <span class="grid size-9 place-items-center rounded-box bg-primary text-primary-content text-sm">
               MD
             </span>
             <span class="hidden sm:inline">{@profile.name}</span>
           </.link>
         </div>
-        <ul class="hidden md:flex items-center gap-1">
+        <ul id="section-nav" class="hidden md:flex items-center gap-1">
           <li :for={{label, href} <- @nav}>
             <a href={href} class="btn btn-ghost btn-sm">{label}</a>
           </li>
@@ -54,10 +61,17 @@ defmodule PortfolioWeb.Layouts do
         <div class="flex items-center gap-1">
           <.theme_selector />
           <div class="dropdown dropdown-end md:hidden">
-            <div tabindex="0" role="button" class="btn btn-ghost btn-sm" aria-label="Open menu">
+            <div
+              id="mobile-menu-toggle"
+              tabindex="0"
+              role="button"
+              class="btn btn-ghost btn-sm"
+              aria-label="Open menu"
+            >
               <.icon name="hero-bars-3" class="size-5" />
             </div>
             <ul
+              id="mobile-menu"
               tabindex="0"
               class="dropdown-content menu z-50 mt-2 w-48 rounded-box border border-base-300 bg-base-200 p-2 shadow-lg"
             >
@@ -72,7 +86,7 @@ defmodule PortfolioWeb.Layouts do
       {render_slot(@inner_block)}
     </main>
 
-    <footer class="border-t border-base-300 bg-base-200">
+    <footer id="site-footer" class="border-t border-base-300 bg-base-200">
       <div class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 py-8 sm:flex-row sm:px-6">
         <p class="text-sm opacity-70">
           © {Date.utc_today().year} {@profile.name} · Built with Elixir, Phoenix LiveView and Fly.io
@@ -200,6 +214,7 @@ defmodule PortfolioWeb.Layouts do
     ~H"""
     <div id="theme-selector" class="dropdown dropdown-end" phx-update="ignore">
       <div
+        id="theme-selector-toggle"
         tabindex="0"
         role="button"
         class="btn btn-ghost btn-sm gap-1"
@@ -211,6 +226,7 @@ defmodule PortfolioWeb.Layouts do
         <.icon name="hero-chevron-down-micro" class="size-4 opacity-60" />
       </div>
       <ul
+        id="theme-menu"
         tabindex="0"
         role="menu"
         aria-label="Colour themes"
@@ -218,6 +234,7 @@ defmodule PortfolioWeb.Layouts do
       >
         <li :for={{value, name, icon} <- @themes} role="none">
           <button
+            id={"theme-option-#{value}"}
             type="button"
             role="menuitemradio"
             aria-checked="false"

@@ -13,7 +13,7 @@ defmodule Portfolio.MixProject do
       compilers: [:phoenix_live_view] ++ Mix.compilers(),
       listeners: [Phoenix.CodeReloader],
       # `mix test --cover` fails below this percentage. Ratchet it up as tests are added.
-      test_coverage: [summary: [threshold: 63]]
+      test_coverage: [summary: [threshold: 99]]
     ]
   end
 

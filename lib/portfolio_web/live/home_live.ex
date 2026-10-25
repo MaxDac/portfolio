@@ -41,7 +41,7 @@ defmodule PortfolioWeb.HomeLive do
           <p class="mt-6 max-w-2xl text-lg opacity-80">{@profile.tagline}</p>
 
           <div class="mt-8 flex flex-wrap gap-3">
-            <a href="#projects" class="btn btn-primary">
+            <a id="hero-cta" href="#projects" class="btn btn-primary">
               See my projects <.icon name="hero-arrow-down" class="size-4" />
             </a>
 
@@ -138,7 +138,11 @@ defmodule PortfolioWeb.HomeLive do
 
                 <div>
                   <h3 class="card-title text-2xl">
-                    <.link navigate={~p"/projects/#{project.slug}"} class="hover:underline">
+                    <.link
+                      id={"project-#{project.slug}-title-link"}
+                      navigate={~p"/projects/#{project.slug}"}
+                      class="hover:underline"
+                    >
                       {project.name}
                     </.link>
                   </h3>
@@ -155,6 +159,7 @@ defmodule PortfolioWeb.HomeLive do
 
               <div class="card-actions mt-4 flex-wrap items-center">
                 <.link
+                  id={"project-#{project.slug}-read-more"}
                   navigate={~p"/projects/#{project.slug}"}
                   class="link link-hover mr-auto text-sm"
                 >
