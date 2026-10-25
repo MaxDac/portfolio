@@ -14,10 +14,16 @@ config :portfolio, PortfolioWeb.Endpoint,
   code_reloader: true,
   debug_errors: true,
   secret_key_base: "A1aX9ySy+dqehHwGUY9dhr2GrcPHZxcioOP36Z23L1/MdhSo6KWQ57ODPd7T4ly7",
-  watchers: [
-    esbuild: {Esbuild, :install_and_run, [:portfolio, ~w(--sourcemap=inline --watch)]},
-    tailwind: {Tailwind, :install_and_run, [:portfolio, ~w(--watch)]}
-  ]
+  # Set NO_WATCHERS=1 to skip the asset watchers, e.g. when the server runs in
+  # the background for the Playwright end-to-end tests (build assets first).
+  watchers:
+    if(System.get_env("NO_WATCHERS"),
+      do: [],
+      else: [
+        esbuild: {Esbuild, :install_and_run, [:portfolio, ~w(--sourcemap=inline --watch)]},
+        tailwind: {Tailwind, :install_and_run, [:portfolio, ~w(--watch)]}
+      ]
+    )
 
 # ## SSL Support
 #
