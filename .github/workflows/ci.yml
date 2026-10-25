@@ -32,7 +32,15 @@ jobs:
       - run: mix deps.get
       - run: mix format --check-formatted
       - run: mix compile --warnings-as-errors
-      - run: mix test
+      - name: Run tests with coverage gate
+        run: mix test --cover
+
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: cover
+          retention-days: 7
 
   assets:
     runs-on: ubuntu-24.04
