@@ -46,6 +46,19 @@ defmodule Portfolio.ContentTest do
   end
 
   describe "projects/0" do
+    test "includes Tannhauser Gate with its GitHub repository as the primary link" do
+      assert %Project{
+               name: "Tannhauser Gate",
+               links: [
+                 %Link{
+                   label: "Source on GitHub",
+                   url: "https://github.com/MaxDac/tannhauser-gate",
+                   kind: :primary
+                 }
+               ]
+             } = Content.get_project("tannhauser-gate")
+    end
+
     test "returns Project structs with unique, URL-safe slugs" do
       projects = Content.projects()
 

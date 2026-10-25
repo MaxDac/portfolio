@@ -176,6 +176,32 @@ defmodule Portfolio.Content do
           %Link{label: "Android app", url: "#{@github}/PriveeApp/releases/latest"},
           %Link{label: "Deploy your own", url: "#{@github}/PriveeDeploy"}
         ]
+      },
+      %Project{
+        slug: "tannhauser-gate",
+        name: "Tannhauser Gate",
+        icon: "hero-chat-bubble-left-right",
+        tagline: "Noir worlds brought to life through play-by-chat role-playing",
+        summary:
+          "A self-hostable platform for text role-playing games, with real-time chat rooms, custom worlds and game-master tools, built with Phoenix LiveView.",
+        description: [
+          "Tannhauser Gate brings players and game masters together for text-based role-playing in real-time chat rooms placed on a world map. Its default setting is Neo-Meridian in 2121, an original noir world inspired by the mood of Blade Runner.",
+          "Game masters can run their own games with a custom guide, theme, character sheet and map. Each game has its own forum, bank and jobs, with tools for narrators to manage characters and moderate play."
+        ],
+        highlights: [
+          "Real-time play-by-chat rooms connected to a world map",
+          "Multiple games with custom settings and character sheets",
+          "Game-master and narrator tools",
+          "Self-hostable with Elixir, Phoenix LiveView and PostgreSQL"
+        ],
+        stack: ["Elixir", "Phoenix LiveView", "PostgreSQL"],
+        links: [
+          %Link{
+            label: "Source on GitHub",
+            url: "#{@github}/tannhauser-gate",
+            kind: :primary
+          }
+        ]
       }
     ]
   end

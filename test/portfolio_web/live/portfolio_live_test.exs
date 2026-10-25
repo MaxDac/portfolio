@@ -28,6 +28,11 @@ defmodule PortfolioWeb.PortfolioLiveTest do
       assert has_element?(view, ~s(a[href="https://marknotes.fly.dev"]))
       assert has_element?(view, ~s(a[href="https://bauta.fly.dev"]))
       assert has_element?(view, ~s(a[href="https://github.com/MaxDac/Repentance/releases"]))
+
+      assert has_element?(
+               view,
+               ~s(#project-tannhauser-gate a[href="https://github.com/MaxDac/tannhauser-gate"][target="_blank"][rel="noopener noreferrer"])
+             )
     end
 
     test "shows the whole experience timeline", %{conn: conn} do
@@ -57,6 +62,18 @@ defmodule PortfolioWeb.PortfolioLiveTest do
   end
 
   describe "project page" do
+    test "links Tannhauser Gate to its GitHub repository", %{conn: conn} do
+      {:ok, view, _html} = live(conn, ~p"/projects/tannhauser-gate")
+
+      assert has_element?(view, "#project-title", "Tannhauser Gate")
+
+      assert has_element?(
+               view,
+               ~s(#project-links a[href="https://github.com/MaxDac/tannhauser-gate"][target="_blank"][rel="noopener noreferrer"]),
+               "Source on GitHub"
+             )
+    end
+
     test "renders details and links", %{conn: conn} do
       for project <- Content.projects() do
         {:ok, view, _html} = live(conn, ~p"/projects/#{project.slug}")
