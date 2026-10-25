@@ -1,6 +1,12 @@
 import { expect, type ConsoleMessage, type Page } from "@playwright/test";
 
-export const PROJECT_SLUGS = ["fpink", "marknotes", "repentance", "privee"] as const;
+export const PROJECT_SLUGS = [
+  "fpink",
+  "marknotes",
+  "repentance",
+  "privee",
+  "tannhauser-gate",
+] as const;
 
 export const HOME_SECTIONS = ["hero", "about", "projects", "experience", "skills", "contact"] as const;
 

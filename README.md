@@ -1,6 +1,6 @@
 # Portfolio
 
-Personal portfolio of **Massimiliano D'Acunzo**, a Software Engineer at Microsoft. It covers my career, skills and open-source projects ([FPInk](https://github.com/MaxDac/fpink), [MarkNotes](https://github.com/MaxDac/MarkNotes), [Repentance](https://github.com/MaxDac/Repentance) and [Privee](https://github.com/MaxDac/Privee)).
+Personal portfolio of **Massimiliano D'Acunzo**, a Software Engineer at Microsoft. It covers my career, skills and open-source projects ([FPInk](https://github.com/MaxDac/fpink), [MarkNotes](https://github.com/MaxDac/MarkNotes), [Repentance](https://github.com/MaxDac/Repentance), [Privee](https://github.com/MaxDac/Privee) and [Tannhauser Gate](https://github.com/MaxDac/tannhauser-gate)).
 
 Built with **Elixir 1.20**, **Phoenix 1.8** and **Phoenix LiveView 1.2**, styled with Tailwind CSS v4 and daisyUI, and deployed on **Fly.io**.
 
