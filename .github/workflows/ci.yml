@@ -59,8 +59,64 @@ jobs:
       - run: mix compile --warnings-as-errors
       - run: mix assets.deploy
 
+  e2e:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      MIX_ENV: dev
+      CI: "true"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: erlef/setup-beam@v1
+        with:
+          version-file: .tool-versions
+          version-type: strict
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: e2e/package-lock.json
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            deps
+            _build
+          key: ${{ runner.os }}-mix-dev-${{ hashFiles('.tool-versions', 'mix.lock') }}
+          restore-keys: ${{ runner.os }}-mix-dev-
+
+      - run: mix deps.get
+      - run: mix assets.setup
+      - run: mix compile
+      - run: mix assets.build
+
+      - name: Install Playwright and Chromium
+        working-directory: e2e
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Typecheck specs
+        working-directory: e2e
+        run: npm run typecheck
+
+      - name: Run Playwright (headless Chromium)
+        working-directory: e2e
+        run: npx playwright test
+
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            e2e/playwright-report
+            e2e/test-results
+          retention-days: 7
+
   deploy:
-    needs: [test, assets]
+    needs: [test, assets, e2e]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'MaxDac/portfolio'
     runs-on: ubuntu-24.04
     timeout-minutes: 30

@@ -21,6 +21,27 @@ mix phx.server    # http://localhost:4000
 mix precommit     # compile with warnings as errors, format and test
 ```
 
+### Tests
+
+```bash
+mix test --cover  # unit tests; fails if coverage drops below the threshold in mix.exs
+```
+
+Coverage is gated by `test_coverage: [summary: [threshold: ...]]` in `mix.exs`.
+When you add tests, raise the threshold to the new total, rounded down, so it never goes backwards.
+
+End-to-end tests live in `e2e/`. They use Playwright with headless Chromium against a dev server that Playwright starts itself:
+
+```bash
+mix assets.build                 # the server runs without asset watchers
+cd e2e
+npm ci
+npx playwright install chromium  # add --with-deps on a fresh Linux machine
+npm test                         # or: npx playwright test --headed / --ui
+```
+
+Playwright reuses a server that is already running on port 4000 (set `E2E_PORT` to change the port). On WSL, run the suite from the Linux filesystem rather than `/mnt/c`. The dev code reloader is slow there, and LiveView connections can time out.
+
 ### Editing content
 
 Profile, highlights, projects, experience, skills, education and the list of themes are all defined in `Portfolio.Content`. Edit that module and the pages update automatically.
@@ -33,7 +54,7 @@ To add a theme, add a `@plugin "daisyui/packages/bundle/daisyui-theme"` block to
 ## Deploying to Fly.io
 
 Production runs at **https://maxdac-portfolio.fly.dev**. Every push to `main`
-automatically deploys after both the `test` and `assets` jobs in
+automatically deploys after the `test`, `assets` and `e2e` jobs in
 `.github/workflows/ci.yml` succeed. Pull requests never deploy. Deployments are
 serialized, and superseded main revisions are skipped before deployment.
 
